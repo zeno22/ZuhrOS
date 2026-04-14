@@ -27,7 +27,7 @@ By aggressively intervening at the lowest levels of the C++ graphics compositor 
 II. Repository Structure (The Patcher)
 --------------------------------------
 
-This repository does not host the entire 200GB+ Android source tree. It acts as a lightweight injection mechanism. It contains the exact mathematical deltas (patch files) and assets needed to transmute a standard LineageOS codebase into ZuhdOS.
+This repository does not host the entire 200GB+ Android source tree. It acts as a lightweight injection mechanism. It contains the exact mathematical deltas (patch files) and assets needed to transmute a standard LineageOS codebase into ZuhdOS. All future updates will be added or updated as patches here unless need for a more comprehensive repository with source files arises.
 
 ```
 ZuhdOS/
