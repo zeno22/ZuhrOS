@@ -4,7 +4,7 @@ ZuhdOS (Ascetic Edition)
 
 **Target Devices:** Pixel 6a (bluejay) | Pixel 7 Pro (cheetah)
 
-**Base Architecture:** LineageOS 23 (Android 15/16)
+**Base Architecture:** LineageOS 23 (Android 16)
 
 I. Architectural Philosophy
 ---------------------------
