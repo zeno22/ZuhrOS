@@ -1,3 +1,4 @@
+
 ZuhdOS (Ascetic Edition)
 ========================
 
@@ -28,26 +29,39 @@ II. Repository Structure (The Patcher)
 
 This repository does not host the entire 200GB+ Android source tree. It acts as a lightweight injection mechanism. It contains the exact mathematical deltas (patch files) and assets needed to transmute a standard LineageOS codebase into ZuhdOS.
 
-Plaintext
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   ZuhdOS/  ├── README.md  ├── assets/  │   └── bootanimation.zip  ├── patches/  │   ├── tasarruf_native.patch  │   ├── tasarruf_settings.patch  │   ├── tasarruf_sepolicy.patch  │   ├── tasarruf_base.patch  │   └── tasarruf_device.patch  └── scripts/      └── apply_zuhd.sh   `
+```
+ZuhdOS/
+├── README.md
+├── assets/
+│   └── bootanimation.zip
+├── patches/
+│   ├── tasarruf_native.patch
+│   ├── tasarruf_settings.patch
+│   ├── tasarruf_sepolicy.patch
+│   ├── tasarruf_base.patch
+│   └── tasarruf_device.patch
+└── scripts/
+    └── apply_zuhd.sh
+```
 
 III. Build Environment & Source Sync
 ------------------------------------
 
 Before applying the ZuhdOS architecture, you must initialize and download the foundational LineageOS 23 source tree.
+The below instructions for initializing LineageOS are demonstrative, please go to lineage wiki for more detailed instructions
+(e.g here are instructions for Pixel 6a ([bluejay](https://wiki.lineageos.org/devices/bluejay/build/)))
 
 **1\. Initialize the repository:**
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   mkdir -p ~/android/lineage  cd ~/android/lineage  repo init -u https://github.com/LineageOS/android.git -b lineage-23.0   `
+```  
+mkdir -p ~/android/lineage  cd ~/android/lineage  repo init -u https://github.com/LineageOS/android.git -b lineage-23.0
+```
 
 **2\. Sync the source tree:**
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags   `
+```
+repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags   
+```
 
 IV. Injecting the Architecture
 ------------------------------
@@ -56,15 +70,15 @@ Once the LineageOS tree is synced, clone this repository outside of the source t
 
 **1\. Clone the ZuhdOS repository:**
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   cd ~  git clone https://github.com/YourUsername/ZuhdOS.git   `
+```
+cd ~  git clone https://github.com/zeno22/ZuhdOS.git   
+```
 
 **2\. Execute the injection script:**
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   cd ~/android/lineage  ../ZuhdOS/scripts/apply_zuhd.sh   `
+```
+cd ~/android/lineage  ../ZuhdOS/scripts/apply_zuhd.sh   
+```
 
 _This script will automatically patch SurfaceFlinger, Settings, SystemUI, sepolicy, and copy the boot animation into the correct device tree._
 
@@ -75,21 +89,20 @@ Initialize the build environment using relaxed compilation flags. This ensures o
 
 **1\. Prepare the environment and select the target:**
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   source build/envsetup.sh  breakfast bluejay  # Replace 'bluejay' with 'cheetah' for Pixel 7 Pro   `
+```
+source build/envsetup.sh  breakfast bluejay  # Replace 'bluejay' with 'cheetah' for Pixel 7 Pro   
+```
 
 **2\. Export relaxed compilation flags:**
-
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   export RELAX_USES_LIBRARY_CHECK=true  export ALLOW_MISSING_DEPENDENCIES=true   `
+```
+ export RELAX_USES_LIBRARY_CHECK=true  export ALLOW_MISSING_DEPENDENCIES=true
+```
 
 **3\. Execute the build:**
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   brunch bluejay -j6   `
+```
+brunch bluejay -j6
+```
 
 _The above example runs the build for Pixel 6a ( bluejay) forcing six cores to compile the source._
 
@@ -104,11 +117,11 @@ _Download GApps here:_ [MindTheGapps-16.0.0-arm64-20260409\_073023.zip](https://
 
 **1\. Boot into Recovery and Format Data:**
 
-Connect your phone, reboot to the bootloader, and select Recovery Mode.
+Connect your phone, reboot to the bootloader, and select Recovery Mode. (Note: This assumes that the bootloader is unlocked and Lineage or TWRP recovery is already setup)
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   adb reboot recovery   `
+```
+adb reboot recovery
+```
 
 *   Navigate to **Factory Reset** -> **Format data / factory reset**.
     
@@ -118,9 +131,9 @@ Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQL
 *   Navigate to **Apply Update** -> **Apply from ADB**.
     
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   adb sideload out/target/product/bluejay/lineage-23.0-XXXX-UNOFFICIAL-bluejay.zip   `
+```
+adb sideload out/target/product/bluejay/lineage-23.0-XXXX-UNOFFICIAL-bluejay.zip
+```
 
 **3\. Reboot to Recovery (Crucial Step):**
 
@@ -134,9 +147,9 @@ Do **not** boot into the operating system yet. You must reboot recovery to swap 
 *   Navigate back to **Apply Update** -> **Apply from ADB**.
     
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   adb sideload path/to/MindTheGapps-16.0.0-arm64-20260409_073023.zip   `
+```
+adb sideload path/to/MindTheGapps-16.0.0-arm64-20260409_073023.zip
+```
 
 **5\. Initial Boot:**
 
@@ -152,32 +165,32 @@ Enable USB Debugging in Developer Options, connect to your workstation, and exec
 
 **1\. Gain Root Access (if on userdebug) or execute as shell:**
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   adb root   `
+```
+adb root   
+```
 
 **2\. Spatial & Density Degradation:**
 
 Scale the display to a 540x1200 resolution to enhance the stippled texture of the chromatic dither and drastically reduce GPU processing load.
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   adb shell wm size 540x1200  adb shell wm density 280   `
+```
+adb shell wm size 540x1200  adb shell wm density 280
+```
 
 **3\. Manual WebView Injection:**
 
 Install the prebuilt ARM64 Chromium WebView to ensure system applications render HTML correctly, independent of the Google Play Store update mechanism.
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   adb install -r -d external/chromium-webview/prebuilt/arm64/webview.apk   `
+```
+adb install -r -d external/chromium-webview/prebuilt/arm64/webview.apk
+```
 
 **4\. Locking the Boundary:**
 
 Because the E-Ink filter relies on underlying property states, leaving the Developer Options menu accessible provides an easy bypass to the system's core constraints. Annihilate access to the menu to secure the architecture.
 
-Bash
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   adb shell settings put global development_settings_enabled 0   `
+```
+adb shell settings put global development_settings_enabled 0
+```
 
 _Note: This strictly disables the UI menu within the Settings app. ADB access will remain active globally as long as your workstation's RSA key remains authorized on the device._
