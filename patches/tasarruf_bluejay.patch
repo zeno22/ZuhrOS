@@ -1,0 +1,29 @@
+diff --git a/device-bluejay.mk b/device-bluejay.mk
+index 2593502..988721f 100644
+--- a/device-bluejay.mk
++++ b/device-bluejay.mk
+@@ -51,6 +51,11 @@ PRODUCT_SHIPPING_API_LEVEL := 32
+ PRODUCT_SOONG_NAMESPACES += \
+     $(DEVICE_PATH)
+ 
++# Enforce GPU composition to maintain RenderEngine E-Ink hooks
++PRODUCT_PROPERTY_OVERRIDES += \
++    debug.sf.disable_hwc=1
++
++
+ # VINTF
+ DEVICE_MANIFEST_FILE += \
+     $(DEVICE_PATH)/vintf/manifest.xml
+diff --git a/lineage_bluejay.mk b/lineage_bluejay.mk
+index 64daa2f..6fb2d3a 100644
+--- a/lineage_bluejay.mk
++++ b/lineage_bluejay.mk
+@@ -27,4 +27,8 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
+     BuildFingerprint=google/bluejay/bluejay:16/BP4A.251205.006/14401865:user/release-keys \
+     DeviceProduct=$(DEVICE_CODENAME)
+ 
++
+ $(call inherit-product, $(VENDOR_PATH)/$(DEVICE_CODENAME)-vendor.mk)
++
++# Bypass broken webview signing
++PRODUCT_PACKAGES += webview

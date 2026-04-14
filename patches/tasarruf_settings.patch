@@ -1,0 +1,32 @@
+diff --git a/res/xml/development_settings.xml b/res/xml/development_settings.xml
+index 5ce46b135f0..042eaefe87e 100644
+--- a/res/xml/development_settings.xml
++++ b/res/xml/development_settings.xml
+@@ -608,6 +608,13 @@
+         android:title="@string/debug_hw_drawing_category"
+         android:order="700">
+ 
++
++	<SwitchPreference
++    		android:key="eink_filter_mode"
++    		android:title="Enable E-Ink Display Filter"
++    		android:summary="Applies a 2-bit dithered threshold to system composition" />
++
++
+         <SwitchPreferenceCompat
+             android:key="show_hw_screen_updates"
+             android:title="@string/show_hw_screen_updates"
+diff --git a/src/com/android/settings/development/DevelopmentSettingsDashboardFragment.java b/src/com/android/settings/development/DevelopmentSettingsDashboardFragment.java
+index 0495ee9e5e0..7e06a5ce01a 100644
+--- a/src/com/android/settings/development/DevelopmentSettingsDashboardFragment.java
++++ b/src/com/android/settings/development/DevelopmentSettingsDashboardFragment.java
+@@ -709,6 +709,9 @@ public class DevelopmentSettingsDashboardFragment extends RestrictedDashboardFra
+             @Nullable DevelopmentSettingsDashboardFragment fragment,
+             @Nullable BluetoothA2dpConfigStore bluetoothA2dpConfigStore) {
+         final List<AbstractPreferenceController> controllers = new ArrayList<>();
++	
++	// Add to the list of controllers
++	controllers.add(new EinkFilterPreferenceController(context));
+         controllers.add(new MemoryUsagePreferenceController(context));
+         controllers.add(new BugReportPreferenceController(context));
+         controllers.add(new BugReportHandlerPreferenceController(context));

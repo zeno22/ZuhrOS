@@ -1,0 +1,68 @@
+diff --git a/private/property.te b/private/property.te
+index a9e13a346..be38a842a 100644
+--- a/private/property.te
++++ b/private/property.te
+@@ -1,4 +1,7 @@
+ # Properties used only in /system
++
++system_restricted_prop(eink_filter_prop)
++
+ system_internal_prop(adbd_prop)
+ system_internal_prop(adbd_tradeinmode_prop)
+ system_internal_prop(apexd_payload_metadata_prop)
+diff --git a/private/property_contexts b/private/property_contexts
+index b325c2ff0..3afe698dd 100644
+--- a/private/property_contexts
++++ b/private/property_contexts
+@@ -2,6 +2,9 @@
+ # property service keys
+ #
+ #
++
++persist.sys.sf.eink_filter      u:object_r:eink_filter_prop:s0
++
+ net.rmnet               u:object_r:net_radio_prop:s0
+ net.gprs                u:object_r:net_radio_prop:s0
+ net.ppp                 u:object_r:net_radio_prop:s0
+diff --git a/private/surfaceflinger.te b/private/surfaceflinger.te
+index f4f64ce4a..814be0489 100644
+--- a/private/surfaceflinger.te
++++ b/private/surfaceflinger.te
+@@ -1,5 +1,7 @@
+ # surfaceflinger - display compositor service
+ 
++get_prop(surfaceflinger, eink_filter_prop)
++
+ typeattribute surfaceflinger coredomain;
+ 
+ type surfaceflinger_exec, system_file_type, exec_type, file_type;
+@@ -70,6 +72,7 @@ set_prop(surfaceflinger, timezone_prop)
+ get_prop(surfaceflinger, qemu_sf_lcd_density_prop)
+ get_prop(surfaceflinger, device_config_surface_flinger_native_boot_prop)
+ 
++
+ # Use open files supplied by an app.
+ allow surfaceflinger appdomain:fd use;
+ allow surfaceflinger { app_data_file privapp_data_file }:file { read write };
+diff --git a/private/system_app.te b/private/system_app.te
+index 020395aa8..594d94f0b 100644
+--- a/private/system_app.te
++++ b/private/system_app.te
+@@ -6,6 +6,7 @@
+ 
+ typeattribute system_app coredomain, mlstrustedsubject;
+ 
++
+ app_domain(system_app)
+ net_domain(system_app)
+ binder_service(system_app)
+@@ -34,6 +35,9 @@ allow system_app wallpaper_file:file r_file_perms;
+ allow system_app icon_file:file r_file_perms;
+ 
+ # Write to properties
++# Allow Settings to toggle the E-Ink filter
++set_prop(system_app, eink_filter_prop)
++
+ set_prop(system_app, adaptive_haptics_prop)
+ set_prop(system_app, arm64_memtag_prop)
+ set_prop(system_app, bluetooth_a2dp_offload_prop)

@@ -1,0 +1,203 @@
+diff --git a/libs/renderengine/skia/SkiaRenderEngine.cpp b/libs/renderengine/skia/SkiaRenderEngine.cpp
+index daa0ecc471..d93c26399b 100644
+--- a/libs/renderengine/skia/SkiaRenderEngine.cpp
++++ b/libs/renderengine/skia/SkiaRenderEngine.cpp
+@@ -91,6 +91,15 @@
+ #include "skia/filters/StretchShaderFactory.h"
+ #include "system/graphics-base-v1.0.h"
+ 
++// File: frameworks/native/libs/renderengine/skia/SkiaRenderEngine.cpp
++// Place this near the top, after the #includes.
++
++#include <cutils/properties.h>
++#include <include/effects/SkRuntimeEffect.h>
++#include <include/core/SkImageFilter.h>
++
++
++
+ namespace {
+ 
+ // Debugging settings
+@@ -817,11 +826,104 @@ void SkiaRenderEngine::drawLayersInternal(
+         return;
+     }
+ 
+-    // setup color filter if necessary
++   
++
++// setup color filter if necessary
+     sk_sp<SkColorFilter> displayColorTransform;
+     if (display.colorTransform != mat4() && !display.deviceHandlesColorTransform) {
+         displayColorTransform = SkColorFilters::Matrix(toSkColorMatrix(display.colorTransform));
+     }
++
++// --- TASARRUF INJECTION: BRUTALIST E-INK SKSL WITH MILD OVERLAY ---
++    if (property_get_bool("persist.sys.sf.eink_filter", false)) {
++        static sk_sp<SkRuntimeEffect> sEinkEffect;
++        
++        // Compile the SkSL shader only once
++        if (!sEinkEffect) {
++            // We use vec4 for all uniforms to guarantee 16-byte memory alignment.
++            const char* sksl = R"(
++                uniform vec4 stepsInfo; 
++                uniform vec4 paperColor;
++                uniform vec4 inkColor;
++
++                // Pseudo-random hash function seeded by color
++                float hash(vec3 c, vec3 seed) {
++                    return fract(sin(dot(c, seed)) * 43758.5453);
++                }
++
++                half4 main(half4 color) {
++                    float steps = stepsInfo.x;
++                    float ditherSpread = stepsInfo.y; // Threshold noise intensity
++                    
++                    // Extract Luminance (REC.709)
++                    float luma = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
++                    
++                    // 1. Chromatic Dithering (Threshold Shift)
++                    float noise1 = hash(color.rgb, vec3(12.9898, 78.233, 37.719));
++                    float ditheredLuma = luma + (noise1 - 0.5) * ditherSpread;
++                    
++                    // 2. Non-linear Quantization
++                    float quantizedLuma = floor(ditheredLuma * steps + 0.5) / steps;
++                    quantizedLuma = clamp(quantizedLuma, 0.0, 1.0);
++                    
++                    // 3. Map to utility palette
++                    vec3 finalColor = mix(inkColor.rgb, paperColor.rgb, quantizedLuma);
++                    
++                    // 4. The Mild Chromatic Overlay
++                    // Generate independent noise to act as a physical "veil"
++                    float noise2 = hash(color.rgb, vec3(41.24, 15.32, 74.89));
++                    
++                    // Subtract a small percentage of light to simulate a stippled texture
++                    // 0.04 represents the "mildness". Increase to make it harsher.
++                    finalColor -= (noise2 * 0.04);
++                    
++                    // 5. Alpha Hack: Prevent premultiplied alpha GPU crashes
++                    float finalAlpha = color.a;
++                    if (finalAlpha == 0.0) {
++                        finalColor = vec3(0.0);
++                    }
++                    
++                    return half4(finalColor, finalAlpha);
++                }
++            )";
++            
++            auto result = SkRuntimeEffect::MakeForColorFilter(SkString(sksl));
++            if (result.effect) {
++                sEinkEffect = result.effect;
++            } else {
++                ALOGE("Tasarruf Injection: SkSL compilation failed: %s", result.errorText.c_str());
++            }
++        }
++
++        // Apply the statically cached effect
++        if (sEinkEffect) {
++            struct EinkUniforms {
++                float stepsInfo[4]; 
++                float paperColor[4];
++                float inkColor[4];
++            };
++            
++            EinkUniforms uniforms = {
++                {3.0f, 0.15f, 0.0f, 0.0f},                   // 3 shades, 0.15 threshold spread
++                {0.85f, 0.85f, 0.80f, 1.0f},                 // Dull paper
++                {0.10f, 0.12f, 0.15f, 1.0f}                  // Faded navy ink
++            };
++            
++            sk_sp<SkData> uniformsData = SkData::MakeWithCopy(&uniforms, sizeof(uniforms));
++            sk_sp<SkColorFilter> einkFilter = sEinkEffect->makeColorFilter(uniformsData);
++            
++            if (displayColorTransform) {
++                displayColorTransform = displayColorTransform->makeComposed(einkFilter);
++            } else {
++                displayColorTransform = einkFilter;
++            }
++        }
++    }
++// -------------------------------------------------
++
++
++
++
+     const bool ctModifiesAlpha =
+             displayColorTransform && !displayColorTransform->isAlphaUnchanged();
+ 
+@@ -877,10 +979,14 @@ void SkiaRenderEngine::drawLayersInternal(
+     canvas->clear(SK_ColorTRANSPARENT);
+     initCanvas(canvas, display);
+ 
++    // RESTORED THE MISSING "if" HERE
+     if (kPrintLayerSettings) {
+         logSettings(display);
+     }
+-    for (const auto& layer : layers) {
++
++   
++ 
++for (const auto& layer : layers) {
+         SFTRACE_FORMAT("DrawLayer: %s", layer.name.c_str());
+ 
+         if (kPrintLayerSettings) {
+diff --git a/services/surfaceflinger/Scheduler/EventThread.cpp b/services/surfaceflinger/Scheduler/EventThread.cpp
+index bea0313162..76e7dbaa3c 100644
+--- a/services/surfaceflinger/Scheduler/EventThread.cpp
++++ b/services/surfaceflinger/Scheduler/EventThread.cpp
+@@ -50,6 +50,7 @@
+ #include "VSyncDispatch.h"
+ 
+ #include "EventThread.h"
++#include <cutils/properties.h>
+ 
+ using namespace std::chrono_literals;
+ 
+@@ -471,7 +472,9 @@ void EventThread::omitVsyncDispatching(bool omitted) {
+ 
+ void EventThread::onVsync(nsecs_t vsyncTime, nsecs_t wakeupTime, nsecs_t readyTime) {
+     std::lock_guard<std::mutex> lock(mMutex);
+-    mLastVsyncCallbackTime = TimePoint::fromNs(vsyncTime);
++
++
++mLastVsyncCallbackTime = TimePoint::fromNs(vsyncTime);
+ 
+     LOG_FATAL_IF(!mVSyncState);
+     mVsyncTracer = (mVsyncTracer + 1) % 2;
+diff --git a/services/surfaceflinger/SurfaceFlinger.cpp b/services/surfaceflinger/SurfaceFlinger.cpp
+index 0ab1a9b812..784a69a686 100644
+--- a/services/surfaceflinger/SurfaceFlinger.cpp
++++ b/services/surfaceflinger/SurfaceFlinger.cpp
+@@ -1114,7 +1114,17 @@ void SurfaceFlinger::init() FTL_FAKE_GUARD(kMainThreadContext) {
+     });
+ 
+     initTransactionTraceWriter();
+-    ALOGV("Done initializing");
++    
++
++
++// --- TASARRUF INJECTION: BOOT HWC OVERRIDE ---
++    // Establish the initial state at boot.
++    mDebugDisableHWC = property_get_bool("debug.sf.disable_hwc", false) || 
++                       property_get_bool("persist.sys.sf.eink_filter", false);
++// ---------------------------------------------
++
++
++ALOGV("Done initializing");
+ }
+ 
+ // During boot, offload `initBootProperties` to another thread. `property_set` depends on
+@@ -2859,6 +2869,14 @@ bool SurfaceFlinger::commit(PhysicalDisplayId pacesetterId,
+     const VsyncId vsyncId = pacesetterFrameTarget.vsyncId();
+     SFTRACE_NAME(ftl::Concat(__func__, ' ', ftl::to_underlying(vsyncId)).c_str());
+ 
++
++// --- TASARRUF INJECTION: DYNAMIC HWC OVERRIDE ---
++    // Continuously assert the Hadd (limit) per frame.
++    mDebugDisableHWC = property_get_bool("debug.sf.disable_hwc", false) || 
++                       property_get_bool("persist.sys.sf.eink_filter", false);
++// ------------------------------------------------
++
++
+     if (pacesetterFrameTarget.didMissFrame()) {
+         mTimeStats->incrementMissedFrames();
+     }
