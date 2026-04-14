@@ -75,6 +75,7 @@ cd ~  git clone https://github.com/zeno22/ZuhdOS.git
 
 **2\. Execute the injection script:**
 
+Note: A part of this script includes updates to a specific device (bluejay). Please update the script to reflect your own device tree.
 ```
 cd ~/android/lineage  ../ZuhdOS/scripts/apply_zuhd.sh   
 ```
