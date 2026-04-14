@@ -38,7 +38,6 @@ ZuhdOS/
 │   ├── tasarruf_native.patch
 │   ├── tasarruf_settings.patch
 │   ├── tasarruf_sepolicy.patch
-│   ├── tasarruf_base.patch
 │   └── tasarruf_device.patch
 └── scripts/
     └── apply_zuhd.sh
