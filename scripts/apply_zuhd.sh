@@ -27,7 +27,7 @@ echo "Patching frameworks/base..."
 cd $LINEAGE_DIR/frameworks/base
 git apply $ZUHD_DIR/patches/tasarruf_base.patch
 
-# 5. Apply Device Specifics (Bluejay)
+# 5. Apply Device Specifics (Bluejay) - Note: This will change depending on device.
 echo "Patching device/google/bluejay..."
 cd $LINEAGE_DIR/device/google/bluejay
 git apply $ZUHD_DIR/patches/tasarruf_bluejay.patch
