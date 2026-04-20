@@ -22,17 +22,13 @@ echo "Patching system/sepolicy..."
 cd $LINEAGE_DIR/system/sepolicy
 git apply $ZUHD_DIR/patches/tasarruf_sepolicy.patch
 
-# 4. Apply SystemUI XML Stamp
-echo "Patching frameworks/base..."
-cd $LINEAGE_DIR/frameworks/base
-git apply $ZUHD_DIR/patches/tasarruf_base.patch
 
-# 5. Apply Device Specifics (Bluejay) - Note: This will change depending on device.
+# 4. Apply Device Specifics (Bluejay) - Note: This will change depending on device.
 echo "Patching device/google/bluejay..."
 cd $LINEAGE_DIR/device/google/bluejay
 git apply $ZUHD_DIR/patches/tasarruf_bluejay.patch
 
-# 6. Inject Boot Animation
+# 5. Inject Boot Animation
 echo "Injecting Boot Animation..."
 cp $ZUHD_DIR/assets/bootanimation.zip $LINEAGE_DIR/device/google/bluejay/bootanimation.zip
 
