@@ -113,7 +113,7 @@ VI. Installation Sequence
 
 This sequence requires the compiled ROM ZIP and the specific MindTheGapps package for ARM64.
 
-_Download GApps here:_ [MindTheGapps-16.0.0-arm64-20260409_073023.zip](https://www.google.com/search?q=https://github.com/MindTheGapps/16.0.0-arm64/releases/download/MindTheGapps-16.0.0-arm64-20[...]
+_Download GApps here:_ [MindTheGapps-16.0.0-arm64-20260409\_073023.zip](https://www.google.com/search?q=https://github.com/MindTheGapps/16.0.0-arm64/releases/download/MindTheGapps-16.0.0-arm64-20260409_073023/MindTheGapps-16.0.0-arm64-20260409_073023.zip)
 
 **1. Boot into Recovery and Format Data:**
 
