@@ -1,5 +1,5 @@
 
-ZuhdOS (Ascetic Edition)
+ZuhrOS (Ascetic Edition)
 ========================
 
 **Target Devices:** Pixel 6a (bluejay) | Pixel 7 Pro (cheetah)
@@ -9,7 +9,7 @@ ZuhdOS (Ascetic Edition)
 I. Architectural Philosophy
 ---------------------------
 
-ZuhdOS is a custom Android operating system engineered to dismantle the engagement-driven design of modern smartphones. It is built for absolute utility, cognitive preservation, and intentional detachment from high-fidelity media consumption.
+ZuhrOS is a custom Android operating system engineered to dismantle the engagement-driven design of modern smartphones. It is built for absolute utility, cognitive preservation, and intentional detachment from high-fidelity media consumption.
 
 By aggressively intervening at the lowest levels of the C++ graphics compositor (SurfaceFlinger) and the SELinux mandatory access control layer, the device is structurally restricted from rendering smooth gradients, vibrant colors, or hardware-accelerated video.
 
@@ -27,10 +27,10 @@ By aggressively intervening at the lowest levels of the C++ graphics compositor 
 II. Repository Structure (The Patcher)
 --------------------------------------
 
-This repository does not host the entire 200GB+ Android source tree. It acts as a lightweight injection mechanism. It contains the exact mathematical deltas (patch files) and assets needed to transmute a standard LineageOS codebase into ZuhdOS. All future updates will be added or updated as patches here unless need for a more comprehensive repository with source files arises.
+This repository does not host the entire 200GB+ Android source tree. It acts as a lightweight injection mechanism. It contains the exact mathematical deltas (patch files) and assets needed to transmute a standard LineageOS codebase into ZuhrOS. All future updates will be added or updated as patches here unless need for a more comprehensive repository with source files arises.
 
 ```
-ZuhdOS/
+ZuhrOS/
 ├── README.md
 ├── assets/
 │   └── bootanimation.zip
@@ -40,13 +40,13 @@ ZuhdOS/
 │   ├── tasarruf_sepolicy.patch
 │   └── tasarruf_device.patch
 └── scripts/
-    └── apply_zuhd.sh
+    └── apply_Zuhr.sh
 ```
 
 III. Build Environment & Source Sync
 ------------------------------------
 
-Before applying the ZuhdOS architecture, you must initialize and download the foundational LineageOS 23 source tree.
+Before applying the ZuhrOS architecture, you must initialize and download the foundational LineageOS 23 source tree.
 The below instructions for initializing LineageOS are demonstrative, please go to lineage wiki for more detailed instructions
 (e.g here are instructions for Pixel 6a ([bluejay](https://wiki.lineageos.org/devices/bluejay/build/)))
 
@@ -67,7 +67,7 @@ IV. Injecting the Architecture
 
 Once the LineageOS tree is synced, clone this repository outside of the source tree and run the installer script to apply the C++, Java, XML, and SELinux modifications.
 
-**1\. Clone the ZuhdOS repository:**
+**1\. Clone the ZuhrOS repository:**
 
 ```
 cd ~  git clone https://github.com/zeno22/ZuhrOS.git   
@@ -77,7 +77,7 @@ cd ~  git clone https://github.com/zeno22/ZuhrOS.git
 
 Note: A part of this script includes updates to a specific device (bluejay). Please update the script to reflect your own device tree.
 ```
-cd ~/android/lineage  ../ZuhdOS/scripts/apply_zuhd.sh   
+cd ~/android/lineage  ../ZuhrOS/scripts/apply_Zuhr.sh   
 ```
 
 _This script will automatically patch SurfaceFlinger, Settings, SystemUI, sepolicy, and copy the boot animation into the correct device tree._
