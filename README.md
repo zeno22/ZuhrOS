@@ -70,7 +70,7 @@ Once the LineageOS tree is synced, clone this repository outside of the source t
 **1\. Clone the ZuhdOS repository:**
 
 ```
-cd ~  git clone https://github.com/zeno22/ZuhdOS.git   
+cd ~  git clone https://github.com/zeno22/ZuhrOS.git   
 ```
 
 **2\. Execute the injection script:**
