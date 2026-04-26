@@ -28,7 +28,12 @@ echo "Patching device/google/bluejay..."
 cd $LINEAGE_DIR/device/google/bluejay
 git apply $ZUHD_DIR/patches/tasarruf_bluejay.patch
 
-# 5. Inject Boot Animation
+# 5. Copy E-Ink Filter Preference Controller
+echo "Installing EinkFilterPreferenceController..."
+mkdir -p $LINEAGE_DIR/packages/apps/Settings/src/com/android/settings/development/
+cp $ZUHD_DIR/src/EinkFilterPreferenceController.java $LINEAGE_DIR/packages/apps/Settings/src/com/android/settings/development/EinkFilterPreferenceController.java
+
+# 6. Inject Boot Animation
 echo "Injecting Boot Animation..."
 cp $ZUHD_DIR/assets/bootanimation.zip $LINEAGE_DIR/device/google/bluejay/bootanimation.zip
 
