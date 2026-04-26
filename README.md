@@ -53,7 +53,9 @@ The below instructions for initializing LineageOS are demonstrative, please go t
 **1. Initialize the repository:**
 
 ```  
-mkdir -p ~/android/lineage  cd ~/android/lineage  repo init -u https://github.com/LineageOS/android.git -b lineage-23.0
+mkdir -p ~/android/lineage
+cd ~/android/lineage
+repo init -u https://github.com/LineageOS/android.git -b lineage-23.0
 ```
 
 **2. Sync the source tree:**
@@ -77,7 +79,8 @@ cd ~  git clone https://github.com/zeno22/ZuhrOS.git
 
 Note: A part of this script includes updates to a specific device (bluejay). Please update the script to reflect your own device tree.
 ```
-cd ~/android/lineage  ../ZuhrOS/scripts/apply_zuhr.sh   
+cd ~/android/lineage
+../ZuhrOS/scripts/apply_zuhr.sh   
 ```
 
 _This script will automatically patch SurfaceFlinger, Settings, SystemUI, sepolicy, and copy the boot animation into the correct device tree._
@@ -95,7 +98,8 @@ source build/envsetup.sh  breakfast bluejay  # Replace 'bluejay' with 'cheetah' 
 
 **2. Export relaxed compilation flags:**
 ```
- export RELAX_USES_LIBRARY_CHECK=true  export ALLOW_MISSING_DEPENDENCIES=true
+export RELAX_USES_LIBRARY_CHECK=true
+export ALLOW_MISSING_DEPENDENCIES=true
 ```
 
 **3. Execute the build:**
@@ -174,7 +178,8 @@ adb root
 Scale the display to a 540x1200 resolution to enhance the stippled texture of the chromatic dither and drastically reduce GPU processing load.
 
 ```
-adb shell wm size 540x1200  adb shell wm density 280
+adb shell wm size 540x1200
+adb shell wm density 280
 ```
 
 **3. Manual WebView Injection:**
