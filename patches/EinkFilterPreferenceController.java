@@ -11,7 +11,7 @@ import com.android.settingslib.development.DeveloperOptionsPreferenceController;
 public class EinkFilterPreferenceController extends DeveloperOptionsPreferenceController
         implements Preference.OnPreferenceChangeListener {
 
-    private static final String EINK_FILTER_KEY = "eink_filter_enable";
+    private static final String EINK_FILTER_KEY = "eink_filter_mode";
     
     // Updated to the persistent property defined in your SEPolicy
     @VisibleForTesting
